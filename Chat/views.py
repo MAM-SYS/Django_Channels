@@ -6,7 +6,9 @@ def index(request):
 
 
 def room(request, room_name):
+    
     username = request.user.username
+    
     context = {
 
         'room_name': room_name,
