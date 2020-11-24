@@ -5,6 +5,20 @@
     <title>Chat Rooms</title>
 </head>
 <body>
+
+    {% for chat_room in chat_rooms %}
+
+
+    <a href="http://localhost:8000/chat/{{ chat_room.roomname }}">{{chat_room.roomname}}</a>
+    <br>
+
+    {% endfor %}
+
+
+
+
+
+
     What chat room would you like to enter?<br>
     <input id="room-name-input" type="text" size="100"><br>
     <input id="room-name-submit" type="button" value="Enter">
