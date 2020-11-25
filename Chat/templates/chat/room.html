@@ -116,16 +116,22 @@
 
 
           var data = JSON.parse(e.data);
-            console.log(data)
           if (data['command'] === 'fetch_message') {
               for (let i=data['message'].length-1; i>=0 ; i--) {
               createMessage(data['message'][i]);
             }
           }
 
-          else {
+          else if (data['command'] === "new_message" ){
             createMessage(data);
             }
+
+          else if(data['command'] === 'img'){
+
+            createMessage(data);
+
+
+          }
 
       };
 
@@ -155,20 +161,70 @@
 
       function createMessage(data) {
         var author = data["__str__"];
-        var msgListTag = document.createElement('li');
-        var imgTag = document.createElement('img');
-        var pTag = document.createElement('p');
-        pTag.textContent = data.content;
-        imgTag.src = "";
+        var command = data['command'];
 
+        if(command == "img"){
+
+          var msgListTag = document.createElement('li');
+          var imgTag = document.createElement('img');
+          imgTag.src = data['content'];
+          msgListTag.appendChild(imgTag);
+        }
+
+        else{
+  
+          var msgListTag = document.createElement('li');
+          var pTag = document.createElement('p');
+          pTag.textContent = data.content;
+          msgListTag.appendChild(pTag);
+
+        }
         if (author === username) {
           msgListTag.className = 'sent';
         } else {
           msgListTag.className = 'replies';
         }
-        msgListTag.appendChild(pTag);
+        
         document.querySelector('#chat-log').appendChild(msgListTag);
       }
+
+
+
+      function readFile() {
+  
+        if (this.files && this.files[0]) {
+          
+          var FR= new FileReader();
+          
+          FR.addEventListener("load", function(e) {
+           
+            chatSocket.send(JSON.stringify({
+              'content': e.target.result,
+              'command': 'img',
+              '__str__' : username,
+              'roomname': roomName
+          }));
+          }); 
+          
+          FR.readAsDataURL( this.files[0] );
+        }
+        
+      }
+      
+      document.getElementById("inp").addEventListener("change", readFile);
+      
+  
+
+
+
+
+
+
+
+
+
+
+
 
     </script>
   </body>
